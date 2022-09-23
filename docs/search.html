@@ -33,8 +33,7 @@
           width: 700px;
           text-align: left;
       }
-
-
+      
       .searchx-url {
           border-radius: 4px;
           font-family: sans-serif;          
@@ -42,7 +41,14 @@
           width: 700px;
           text-align: left;
       }
+
+      .searchx-spacer {
+          display: block;
+          padding: 5px;
+          padding-bottom: 20px;
+      }      
     </style>
+    
   </head>
   <body>
     <center>
@@ -50,6 +56,11 @@
       <form>
         🔍 <input type="text" id="search-field" name="fname" size="60"><br>
       </form>
+      <div class="searchx-num-results">
+        <span id="num-results">0</span>
+        <span>results<span>
+      </div>
+      <div class="searchx-spacer"></div> 
       <div id="search-results"> </div>
     </center>
     <script src="search.js"></script>

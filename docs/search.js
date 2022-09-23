@@ -26,8 +26,6 @@ class Trie {
     }
     return cur.items;
   }
-
-  
 }
 
 class SearchIndex {
@@ -50,7 +48,6 @@ class SearchIndex {
           this.page_table[i] = JSON.parse(json.page_table[i]);
         }
       });
-
   }
 
   search(term) {
@@ -64,7 +61,6 @@ class Search {
     // consider dropping it local storage?
     this.index = new SearchIndex();
     this.element_buffer = [];
-
   }
 
   // clear out the search results.
@@ -90,21 +86,27 @@ class Search {
 
   doSearch() {
     function intersection(xs1, xs2) {
+      // modified intersection. don't allow empty sets to wipe out all results
+      if (xs1.length == 0) return xs2;
+      if (xs2.length == 0) return xs1;
+      
       // https://www.techiedelight.com/find-intersection-arrays-javascript/
       return xs1.filter(x => xs2.indexOf(x) !== -1);
     }
     
     var terms = this.getSearchTerms("search-field");
     terms = terms.trim().split(/\s+/);
-
-    let pageids1 = this.doOneSearch(terms[0]);
     
-    for (var i=1; i<terms.length; i++) {
-      let term = terms[i];      
+    let pageids1 = []; 
+    
+    for (var i=0; i<terms.length; i++) {
+      let term = terms[i];
+
+      // don't consider words with less than three characters.
+      console.log([term, term.length]);
+      if (term.length < 3) continue;
+      
       let pageids2 = this.doOneSearch(term);
-      if (pageids2.length == 0) {
-        continue; // don't nuke all the results 
-      }
       pageids1 = intersection(pageids1, pageids2);
     }
     
@@ -121,14 +123,14 @@ class Search {
     let page = this.index.page_table[pageid];
     return page;
   }
-
+  
   buildSnippet(page, terms) {   
     let snippet = document.createElement("div");
     snippet.className = "searchx-snippet";
     let parts = page.text.split(terms);
-    let N = 40;
+    let N = 40; // the amount of context to the left and right
     
-    for (var i=0; i<parts.length-1; i++) { 
+    for (var i=0; i<parts.length-1; i++) {      
       let leftTxt = parts[i];
       let rightTxt = parts[i+1];
       
@@ -137,7 +139,7 @@ class Search {
       leftSpan.appendChild(leftNode);
  
       let termSpan = document.createElement("span"); 
-      let termNode = document.createTextNode(" " + terms + " " );
+      let termNode = document.createTextNode(terms);
       termSpan.className = "searchx-boldspan";
       termSpan.appendChild(termNode);
 
@@ -152,20 +154,18 @@ class Search {
     
     return snippet;
   }
-
+  
   buildUrl(page) {
     let url = document.createElement("div");
     url.className = "searchx-url";
-    let url_prefix = "";
+    //let url_prefix = "";
     var a = document.createElement('a');
     var txt = document.createTextNode(page.title);
     a.setAttribute('href', page.url);
     a.appendChild(txt);
     url.appendChild(a);
-    
-    return url
+    return url;
   }
-
   
   addOneResult(pageid, terms) {
     let page = this.getPage(pageid);
