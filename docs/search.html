@@ -46,7 +46,18 @@
           display: block;
           padding: 5px;
           padding-bottom: 20px;
-      }      
+      }
+
+      .searchx-num-results {
+          border-radius: 4px;
+          width: 600px;
+          text-align: left;
+      }
+
+      body {
+          overflow-y: scroll; /* Show vertical scrollbar */
+      }
+
     </style>
     
   </head>
@@ -56,8 +67,7 @@
       <form>
         🔍 <input type="text" id="search-field" name="fname" size="60"><br>
       </form>
-      <div class="searchx-num-results">
-      </div>
+      <!-- <div id="num-results" class="searchx-num-results">found: 0 result </div> -->
       <div class="searchx-spacer"></div> 
       <div id="search-results"> </div>
     </center>

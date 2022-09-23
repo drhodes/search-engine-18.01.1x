@@ -111,6 +111,12 @@ class Search {
     }
     
     this.showResults(pageids1, terms[0]);
+    this.updateResultCount(pageids1.length);
+  }
+
+  updateResultCount(n) { 
+    // let div = document.getElementById("num-results");
+   
   }
   
   showResults(pageids, terms) {
