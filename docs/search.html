@@ -40,6 +40,9 @@
           padding: 5px;
           width: 700px;
           text-align: left;
+          text-decoration: underline;
+          cursor: pointer;
+          color: #AA336A;
       }
 
       .searchx-spacer {
@@ -65,7 +68,7 @@
     <center>
       <div class="searchx-title"> Search Calc 1A </div>
       <form>
-        🔍 <input type="text" id="search-field" name="fname" size="60"><br>
+        🔍 <input type="text" id="search-field" name="fname" size="60" onkeypress="return event.keyCode != 13;"><br>
       </form>
       <!-- <div id="num-results" class="searchx-num-results">found: 0 result </div> -->
       <div class="searchx-spacer"></div> 

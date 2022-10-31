@@ -129,12 +129,32 @@ class Search {
     let page = this.index.page_table[pageid];
     return page;
   }
+
+  cleanupText(text) {
+    text = text.replaceAll("[mathjaxinline]", "");
+    text = text.replaceAll("[mathjax]", "");
+    text = text.replaceAll("[//mathjax]", "");
+    text = text.replaceAll("[/mathjaxinline]", "");
+    text = text.replaceAll("\\displaystyle", "");
+    text = text.replaceAll("\\,", "");
+    text = text.replaceAll("\\", "");
+    text = text.replaceAll("---|---", "");
+    text = text.replaceAll("---", "");
+    text = text.replaceAll("| |", "");
+    text = text.replaceAll("||", "");
+    text = text.replaceAll("|", "");
+    text = text.replaceAll("**", "");
+    return text;
+  }
   
   buildSnippet(page, terms) {   
     let snippet = document.createElement("div");
     snippet.className = "searchx-snippet";
-    let parts = page.text.split(terms);
-    let N = 40; // the amount of context to the left and right
+
+    let text = this.cleanupText(page.text);
+    
+    let parts = text.split(terms);
+    let N = 80; // the amount of context to the left and right
     
     for (var i=0; i<parts.length-1; i++) {      
       let leftTxt = parts[i];
@@ -150,7 +170,7 @@ class Search {
       termSpan.appendChild(termNode);
 
       let rightSpan = document.createElement("span"); 
-      let rightNode = document.createTextNode(rightTxt.substring(0, N) + "... ");
+      let rightNode = document.createTextNode(rightTxt.substring(0, N) + " … ");
       rightSpan.appendChild(rightNode);
 
       snippet.appendChild(leftSpan);
@@ -164,11 +184,14 @@ class Search {
   buildUrl(page) {
     let url = document.createElement("div");
     url.className = "searchx-url";
-    //let url_prefix = "";
     var a = document.createElement('a');
     var txt = document.createTextNode(page.title);
-    a.setAttribute('href', page.url);
     a.appendChild(txt);
+
+    a.onclick = function() {
+      window.open(page.url, '_blank').focus();
+    };
+    
     url.appendChild(a);
     return url;
   }
@@ -195,6 +218,14 @@ class Search {
       //log("keyup: " + this.getSearchTerms(element_id));
       this.clear();
       this.doSearch();
+    });
+
+    el.addEventListener("keydown", (event) => {
+      // Ignore keypress if all fields are not populated.
+      if (event.which === 13) {
+        return false;
+      }
+      return true;
     });
   }
 }
